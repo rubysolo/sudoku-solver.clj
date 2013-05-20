@@ -1,13 +1,9 @@
 # sudoku-solver
 
-A Clojure library designed to ... well, that part is up to you.
-
-## Usage
-
-FIXME
+Sudoku solver written in Clojure.  Does not work yet.
 
 ## License
 
-Copyright © 2013 FIXME
+Copyright © 2013 Solomon White
 
 Distributed under the Eclipse Public License, the same as Clojure.
