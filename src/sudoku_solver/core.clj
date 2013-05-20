@@ -7,8 +7,7 @@
 (defn rows [board]
   (let [[row-size remaining] (side-length board)
         index-offset (fn [rindex] (* row-size rindex))]
-    (map (fn [offset]
-           (subvec board offset (+ row-size offset)))
+    (map #(subvec board %1 (+ row-size %1))
       (map index-offset (range row-size)))))
 
 (defn cols [board]
@@ -17,9 +16,8 @@
                  (vec (map (fn [v] (nth v r)) rs))))))
 
 (defn square-offsets [outer inner]
-    (map (fn [s]
-           (+ (* outer inner (quot s inner))
-              (* inner (rem s inner))))
+    (map #(+ (* outer inner (quot %1 inner))
+             (* inner (rem %1 inner)))
          (range outer)))
 
 (defn squares [board]
