@@ -5,10 +5,8 @@
   (exact-integer-sqrt (count board)))
 
 (defn rows [board]
-  (let [[row-size remaining] (side-length board)
-        index-offset (fn [rindex] (* row-size rindex))]
-    (map #(subvec board %1 (+ row-size %1))
-      (map index-offset (range row-size)))))
+  (let [[row-size remaining] (side-length board)]
+    (vec (map vec (partition row-size board)))))
 
 (defn cols [board]
   (let [rs (rows board)]
@@ -16,17 +14,16 @@
                  (vec (map (fn [v] (nth v r)) rs))))))
 
 (defn square-offsets [outer inner]
-    (map #(+ (* outer inner (quot %1 inner))
-             (* inner (rem %1 inner)))
-         (range outer)))
+  (map (fn [o]
+         [(* inner (quot o inner)) (* inner (rem o inner))])
+       (range outer)))
 
 (defn squares [board]
-  (let [[row-size remaining] (side-length board)
+  (let [rows (rows board)
+        [row-size remaining] (side-length board)
         [inner-row-size _] (exact-integer-sqrt row-size)
         offsets (square-offsets row-size inner-row-size)]
-    (vec (map (fn [o]
-           (vec (flatten (map (fn [r]
-             (let [offset (+ o (* row-size r))]
-               (subvec board offset (+ inner-row-size offset))))
-               (range inner-row-size)))))
-         offsets))))
+    (vec (map #(let [[x y] %1]
+                (vec (for [xo (range inner-row-size) yo (range inner-row-size)]
+                  (get-in rows [(+ x xo) (+ y yo)]))))
+              (square-offsets row-size inner-row-size)))))
